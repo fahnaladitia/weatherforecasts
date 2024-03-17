@@ -11,109 +11,130 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        image: DecorationImage(image: AssetImage('assets/images/home_bg.png'), fit: BoxFit.cover),
-        // gradient: LinearGradient(
-        //   begin: Alignment.topRight,
-        //   end: Alignment.bottomLeft,
-        //   colors: [
-        //     Color(0xFF47BFDF),
-        //     Color(0xFF4A91FF),
-        //   ],
-        // ),
+        image: DecorationImage(
+          image: AssetImage('assets/images/home_bg.png'),
+          fit: BoxFit.cover,
+        ),
       ),
       child: BasicScaffold(
         backgroundColor: Colors.transparent,
-        resizeToAvoidBottomInset: true,
-        appBar: AppBar(
-          elevation: 0,
-          foregroundColor: Colors.black,
-          backgroundColor: Colors.transparent,
-          title: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              borderRadius: BorderRadius.circular(4),
-              onTap: () {},
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 4,
-                  vertical: 4,
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    FaIcon(
-                      FontAwesomeIcons.locationDot,
-                      size: 14,
-                      color: kLight100,
-                      shadows: [
-                        Shadow(
-                          color: kDark500.withOpacity(0.5),
-                          offset: const Offset(-1, 1.5),
-                          blurRadius: 5,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Kota Samarinda',
-                      style: AppTextStyle.body1SemiBold(context)?.copyWith(
-                        color: kLight100,
-                        shadows: [
-                          Shadow(
-                            color: kDark500.withOpacity(0.5),
-                            offset: const Offset(-1, 1.5),
-                            blurRadius: 5,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    FaIcon(
-                      FontAwesomeIcons.caretDown,
-                      size: 14,
-                      color: kLight100,
-                      shadows: [
-                        Shadow(
-                          color: kDark500.withOpacity(0.5),
-                          offset: const Offset(-1, 1.5),
-                          blurRadius: 5,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          actions: [
-            IconButton(
-              icon: FaIcon(
-                FontAwesomeIcons.magnifyingGlass,
-                size: 14,
-                color: kLight100,
-                shadows: [
-                  Shadow(
-                    color: kDark500.withOpacity(0.5),
-                    offset: const Offset(-1, 1.5),
-                    blurRadius: 5,
-                  ),
-                ],
-              ),
-              onPressed: () {},
-            ),
-          ],
-        ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 24),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: GlassContainer(
+                      borderRadius: BorderRadius.circular(24),
+                      color: kLight100.withOpacity(0.25),
+                      shadowStrength: 0,
+                      border: Border.all(color: kLight100.withOpacity(0.8)),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 16,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                FaIcon(
+                                  FontAwesomeIcons.locationDot,
+                                  size: 14,
+                                  color: kLight100,
+                                  shadows: [
+                                    Shadow(
+                                      color: kDark500.withOpacity(0.5),
+                                      offset: const Offset(-1, 1.5),
+                                      blurRadius: 5,
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  'Kota Samarinda',
+                                  style: AppTextStyle.body1SemiBold(context)?.copyWith(
+                                    color: kLight100,
+                                    shadows: [
+                                      Shadow(
+                                        color: kDark500.withOpacity(0.5),
+                                        offset: const Offset(-1, 1.5),
+                                        blurRadius: 5,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                FaIcon(
+                                  FontAwesomeIcons.chevronRight,
+                                  size: 14,
+                                  color: kLight100,
+                                  shadows: [
+                                    Shadow(
+                                      color: kDark500.withOpacity(0.5),
+                                      offset: const Offset(-1, 1.5),
+                                      blurRadius: 5,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  GlassContainer(
+                    borderRadius: BorderRadius.circular(8),
+                    color: kLight100.withOpacity(0.25),
+                    shadowStrength: 0,
+                    // border: Border.all(color: kLight100.withOpacity(0.8)),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        overlayColor: MaterialStateProperty.resolveWith((states) {
+                          if (states.contains(MaterialState.pressed)) {
+                            return kLight100.withOpacity(0.75);
+                          }
+                          return kLight100.withOpacity(0.50);
+                        }),
+                        onTap: () {},
+                        borderRadius: BorderRadius.circular(8),
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          child: FaIcon(
+                            FontAwesomeIcons.magnifyingGlass,
+                            size: 14,
+                            color: kLight100,
+                            shadows: [
+                              Shadow(
+                                color: kDark500.withOpacity(0.5),
+                                offset: const Offset(-1, 1.5),
+                                blurRadius: 5,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             Container(
               margin: const EdgeInsets.all(16),
               child: GlassContainer(
                 borderRadius: BorderRadius.circular(16),
                 color: kLight100.withOpacity(0.25),
                 shadowStrength: 0,
-                // border: Border.all(color: kLight100.withOpacity(0.8)),
                 child: Container(
                   padding: const EdgeInsets.all(24),
                   child: Column(
@@ -150,27 +171,41 @@ class MainPage extends StatelessWidget {
                                 '28°',
                                 style: AppTextStyle.heading2(context)?.copyWith(
                                   color: kLight100,
+                                  fontSize: 48,
+                                  shadows: [
+                                    Shadow(
+                                      color: kDark500.withOpacity(0.5),
+                                      offset: const Offset(-1, 1.5),
+                                      blurRadius: 5,
+                                    ),
+                                  ],
                                 ),
                               ),
                               Text(
-                                'Sunny Day',
-                                style: AppTextStyle.body1(context)?.copyWith(
+                                'Rain',
+                                style: AppTextStyle.heading6(context)?.copyWith(
                                   color: kLight100,
+                                  shadows: [
+                                    Shadow(
+                                      color: kDark500.withOpacity(0.5),
+                                      offset: const Offset(-1, 1.5),
+                                      blurRadius: 5,
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
-                          // Icon
-                          // const FaIcon(
-                          //   FontAwesomeIcons.cloudSun,
-                          //   size: 64,
-                          //   color: kLight100,
-                          // ),
                           Image.network(
-                            'https://openweathermap.org/img/wn/10d@2x.png',
-                            width: 64,
-                            height: 64,
-                          )
+                            'https://openweathermap.org/img/wn/02n@2x.png',
+                            width: 94,
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) {
+                                return child;
+                              }
+                              return const CircularProgressIndicator(color: kLight100);
+                            },
+                          ),
                         ],
                       ),
                       const SizedBox(height: 24),
@@ -197,7 +232,7 @@ class MainPage extends StatelessWidget {
                           Row(
                             children: [
                               const FaIcon(
-                                FontAwesomeIcons.temperatureLow,
+                                FontAwesomeIcons.temperatureHigh,
                                 size: 18,
                                 color: kLight100,
                               ),
@@ -236,7 +271,7 @@ class MainPage extends StatelessWidget {
                           Row(
                             children: [
                               const FaIcon(
-                                FontAwesomeIcons.temperatureHigh,
+                                FontAwesomeIcons.temperatureLow,
                                 size: 18,
                                 color: kLight100,
                               ),
@@ -402,7 +437,7 @@ class MainPage extends StatelessWidget {
                           Container(
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              gradient: LinearGradient(
+                              gradient: const LinearGradient(
                                 begin: Alignment.topRight,
                                 end: Alignment.bottomLeft,
                                 colors: [
@@ -434,7 +469,7 @@ class MainPage extends StatelessWidget {
                           ),
                           const SizedBox(width: 8),
                           // Button
-                          FaIcon(
+                          const FaIcon(
                             FontAwesomeIcons.chevronRight,
                             size: 14,
                             color: kDark500,
