@@ -11,7 +11,7 @@ class AppRestClient {
     dio = Dio(
       BaseOptions(
         baseUrl: baseURL,
-        extra: {"appid": apiKey},
+        queryParameters: {"appid": apiKey},
       ),
     );
     dio.interceptors.addAll([

@@ -6,6 +6,10 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
 import 'core/config/app_rest_client.dart';
+import 'data/repositories/repositories.dart';
+import 'data/sources/remote/services/services.dart';
+import 'domain/repositories/repositories.dart';
+import 'ui/main/cubit/get_current_weather_cubit.dart';
 
 class DependencyInjection {
   DependencyInjection._();
@@ -21,11 +25,18 @@ class DependencyInjection {
   static Future<void> _initializeServices() async {
 // Client Http Services
     DI.registerFactory<Dio>(() => AppRestClient(baseURL: baseURL, apiKey: apiKey).dio);
+
+    DI.registerFactory<WeatherService>(() => WeatherService(DI.get<Dio>()));
   }
 
   static Future<void> _initializeDatabase() async {}
-  static Future<void> _initializeRepositories() async {}
+  static Future<void> _initializeRepositories() async {
+    DI.registerFactory<IWeatherRepository>(() => WeatherRepository(DI.get<WeatherService>()));
+  }
+
   static Future<void> _initializeBlocs() async {
     Bloc.observer = const SimpleBlocObserver();
+
+    DI.registerFactory<GetCurrentWeatherCubit>(() => GetCurrentWeatherCubit(DI.get<IWeatherRepository>()));
   }
 }

@@ -55,6 +55,10 @@ dependencies:
   objectbox: ^2.5.1
   awesome_icons: ^1.1.0
   glassmorphism_ui: ^0.3.0
+  # google_maps_flutter: ^2.6.0
+  geocoding: ^3.0.0
+  shimmer: ^3.0.0
+  geolocator: ^11.0.0
 
 dev_dependencies:
   flutter_test:
