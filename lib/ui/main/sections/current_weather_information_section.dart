@@ -183,7 +183,7 @@ class CurrentWeatherInformationSection extends StatelessWidget {
                     Material(
                       color: Colors.transparent,
                       child: InkWell(
-                        onTap: () {},
+                        onTap: () => context.read<GetCurrentWeatherCubit>().getCurrentWeatherWithCurrentPosition(),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
