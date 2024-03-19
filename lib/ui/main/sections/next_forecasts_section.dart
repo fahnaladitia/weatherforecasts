@@ -8,6 +8,7 @@ class NextForecastsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Weather Forecast 5 day - Vertical List
         Padding(
