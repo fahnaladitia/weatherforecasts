@@ -11,17 +11,18 @@ class GeoapifyService {
   static Future<List<Suggestion>> getGeoapifyData(String query) async {
     try {
       final response = await http.get(
-        Uri.parse('https://api.geoapify.com/v1/geocode/search?text=$query&apiKey=294aa2188858442fb60715c5ba0c1c36'),
+        Uri.parse(
+            'https://api.geoapify.com/v1/geocode/autocomplete?text=$query&lang=id&limit=5&filter=countrycode:id&format=json&apiKey=294aa2188858442fb60715c5ba0c1c36'),
       );
       if (response.statusCode == 200) {
         final responseDecoded = GetAutoCompleteGeoapifyResponse.fromJson(json.decode(response.body));
 
-        return responseDecoded.features?.map((e) {
+        return responseDecoded.results?.map((e) {
               return Suggestion(
-                  address: e.properties?.formatted ?? '',
+                  address: e.formatted ?? '',
                   latLng: LatLng(
-                    e.properties?.lat?.toDouble() ?? 0,
-                    e.properties?.lon?.toDouble() ?? 0,
+                    e.lat?.toDouble() ?? 0,
+                    e.lon?.toDouble() ?? 0,
                   ));
             }).toList() ??
             [];

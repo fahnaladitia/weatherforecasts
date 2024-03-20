@@ -9,5 +9,5 @@ abstract class Routes {
 abstract class _Paths {
   _Paths._();
   static const MAIN = '/';
-  static const MAPS = '/maps';
+  static const MAPS = '/maps_page';
 }

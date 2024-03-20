@@ -1,16 +1,14 @@
 class GetAutoCompleteGeoapifyResponse {
-  String? type;
-  List<GetAutoCompleteGeoapifyResponseFeatures>? features;
+  List<GetAutoCompleteGeoapifyResponseResults>? results;
   GetAutoCompleteGeoapifyResponseQuery? query;
 
-  GetAutoCompleteGeoapifyResponse({this.type, this.features, this.query});
+  GetAutoCompleteGeoapifyResponse({this.results, this.query});
 
   GetAutoCompleteGeoapifyResponse.fromJson(Map<String, dynamic> json) {
-    type = json['type'];
-    if (json['features'] != null) {
-      features = <GetAutoCompleteGeoapifyResponseFeatures>[];
-      json['features'].forEach((v) {
-        features!.add(GetAutoCompleteGeoapifyResponseFeatures.fromJson(v));
+    if (json['results'] != null) {
+      results = <GetAutoCompleteGeoapifyResponseResults>[];
+      json['results'].forEach((v) {
+        results!.add(GetAutoCompleteGeoapifyResponseResults.fromJson(v));
       });
     }
     query = json['query'] != null ? GetAutoCompleteGeoapifyResponseQuery.fromJson(json['query']) : null;
@@ -18,9 +16,8 @@ class GetAutoCompleteGeoapifyResponse {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['type'] = type;
-    if (features != null) {
-      data['features'] = features!.map((v) => v.toJson()).toList();
+    if (results != null) {
+      data['results'] = results!.map((v) => v.toJson()).toList();
     }
     if (query != null) {
       data['query'] = query!.toJson();
@@ -29,37 +26,7 @@ class GetAutoCompleteGeoapifyResponse {
   }
 }
 
-class GetAutoCompleteGeoapifyResponseFeatures {
-  String? type;
-  GetAutoCompleteGeoapifyResponseProperties? properties;
-  GetAutoCompleteGeoapifyResponseGeometry? geometry;
-  List<double>? bbox;
-
-  GetAutoCompleteGeoapifyResponseFeatures({this.type, this.properties, this.geometry, this.bbox});
-
-  GetAutoCompleteGeoapifyResponseFeatures.fromJson(Map<String, dynamic> json) {
-    type = json['type'];
-    properties =
-        json['properties'] != null ? GetAutoCompleteGeoapifyResponseProperties.fromJson(json['properties']) : null;
-    geometry = json['geometry'] != null ? GetAutoCompleteGeoapifyResponseGeometry.fromJson(json['geometry']) : null;
-    bbox = json['bbox'].cast<double>();
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['type'] = type;
-    if (properties != null) {
-      data['properties'] = properties!.toJson();
-    }
-    if (geometry != null) {
-      data['geometry'] = geometry!.toJson();
-    }
-    data['bbox'] = bbox;
-    return data;
-  }
-}
-
-class GetAutoCompleteGeoapifyResponseProperties {
+class GetAutoCompleteGeoapifyResponseResults {
   String? country;
   String? countryCode;
   String? region;
@@ -79,11 +46,9 @@ class GetAutoCompleteGeoapifyResponseProperties {
   String? plusCodeShort;
   GetAutoCompleteGeoapifyResponseRank? rank;
   String? placeId;
-  String? county;
-  String? postcode;
-  String? district;
+  GetAutoCompleteGeoapifyResponseBbox? bbox;
 
-  GetAutoCompleteGeoapifyResponseProperties(
+  GetAutoCompleteGeoapifyResponseResults(
       {this.country,
       this.countryCode,
       this.region,
@@ -103,11 +68,9 @@ class GetAutoCompleteGeoapifyResponseProperties {
       this.plusCodeShort,
       this.rank,
       this.placeId,
-      this.county,
-      this.postcode,
-      this.district});
+      this.bbox});
 
-  GetAutoCompleteGeoapifyResponseProperties.fromJson(Map<String, dynamic> json) {
+  GetAutoCompleteGeoapifyResponseResults.fromJson(Map<String, dynamic> json) {
     country = json['country'];
     countryCode = json['country_code'];
     region = json['region'];
@@ -128,9 +91,7 @@ class GetAutoCompleteGeoapifyResponseProperties {
     plusCodeShort = json['plus_code_short'];
     rank = json['rank'] != null ? GetAutoCompleteGeoapifyResponseRank.fromJson(json['rank']) : null;
     placeId = json['place_id'];
-    county = json['county'];
-    postcode = json['postcode'];
-    district = json['district'];
+    bbox = json['bbox'] != null ? GetAutoCompleteGeoapifyResponseBbox.fromJson(json['bbox']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -160,9 +121,9 @@ class GetAutoCompleteGeoapifyResponseProperties {
       data['rank'] = rank!.toJson();
     }
     data['place_id'] = placeId;
-    data['county'] = county;
-    data['postcode'] = postcode;
-    data['district'] = district;
+    if (bbox != null) {
+      data['bbox'] = bbox!.toJson();
+    }
     return data;
   }
 }
@@ -255,21 +216,27 @@ class GetAutoCompleteGeoapifyResponseRank {
   }
 }
 
-class GetAutoCompleteGeoapifyResponseGeometry {
-  String? type;
-  List<double>? coordinates;
+class GetAutoCompleteGeoapifyResponseBbox {
+  num? lon1;
+  num? lat1;
+  num? lon2;
+  num? lat2;
 
-  GetAutoCompleteGeoapifyResponseGeometry({this.type, this.coordinates});
+  GetAutoCompleteGeoapifyResponseBbox({this.lon1, this.lat1, this.lon2, this.lat2});
 
-  GetAutoCompleteGeoapifyResponseGeometry.fromJson(Map<String, dynamic> json) {
-    type = json['type'];
-    coordinates = json['coordinates'].cast<double>();
+  GetAutoCompleteGeoapifyResponseBbox.fromJson(Map<String, dynamic> json) {
+    lon1 = json['lon1'];
+    lat1 = json['lat1'];
+    lon2 = json['lon2'];
+    lat2 = json['lat2'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['type'] = type;
-    data['coordinates'] = coordinates;
+    data['lon1'] = lon1;
+    data['lat1'] = lat1;
+    data['lon2'] = lon2;
+    data['lat2'] = lat2;
     return data;
   }
 }

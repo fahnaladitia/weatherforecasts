@@ -184,6 +184,7 @@ class _MapsPageState extends State<MapsPage> with TickerProviderStateMixin {
                           Opacity(
                             opacity: _animation.value / 48,
                             child: FloatingActionButton.small(
+                              heroTag: 'selectLocation',
                               backgroundColor: kLight100,
                               child: const FaIcon(
                                 FontAwesomeIcons.check,
@@ -199,6 +200,7 @@ class _MapsPageState extends State<MapsPage> with TickerProviderStateMixin {
                       )
                     : const SizedBox(),
                 FloatingActionButton.small(
+                  heroTag: 'currentLocation',
                   backgroundColor: kLight100,
                   child: const FaIcon(
                     FontAwesomeIcons.crosshairs,
