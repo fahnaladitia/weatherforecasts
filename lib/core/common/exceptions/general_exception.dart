@@ -10,14 +10,14 @@ class GeneralException implements Exception {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'code': code,
+      'cod': code,
       'message': message,
     };
   }
 
   factory GeneralException.fromMap(Map<String, dynamic> map) {
     return GeneralException(
-      code: map['code'] as String,
+      code: map['cod'] as String,
       message: map['message'] as String,
     );
   }

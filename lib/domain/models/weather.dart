@@ -5,13 +5,16 @@ import 'package:geocoding/geocoding.dart';
 import 'package:weatherforecasts/core/common/common.dart';
 
 class Weather {
-  // final LatLng latLng;
+  final double latitude;
+  final double longitude;
   final WeatherCondition weatherCondition;
   final WeatherMain weatherMain;
   final WeatherWind weatherWind;
   final DateTime date;
   final Placemark? placemark;
   Weather({
+    required this.latitude,
+    required this.longitude,
     // required this.latLng,
     required this.weatherCondition,
     required this.weatherMain,
@@ -30,7 +33,7 @@ class Weather {
 
   @override
   String toString() {
-    return 'Weather(weatherCondition: $weatherCondition, weatherMain: $weatherMain, weatherWind: $weatherWind, date: $date, placemark: $placemark)';
+    return 'Weather(latitude: $latitude, longitude: $longitude, weatherCondition: $weatherCondition, weatherMain: $weatherMain, weatherWind: $weatherWind, date: $date, placemark: $placemark)';
   }
 }
 

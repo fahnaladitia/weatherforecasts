@@ -61,7 +61,7 @@ abstract class BaseService {
         }
         if (e.response!.statusCode == 400) {
           return GeneralException(
-            code: e.response!.data['code'] ?? ErrorCodeConstants.unknownCode,
+            code: e.response!.data['cod'] ?? ErrorCodeConstants.unknownCode,
             message: e.response!.data.toString(),
           );
         }

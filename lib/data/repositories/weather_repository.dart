@@ -14,6 +14,8 @@ class WeatherRepository implements IWeatherRepository {
     final placemark = placemarks.firstOrNull;
 
     return Weather(
+      latitude: response.coord?.lat?.toDouble() ?? 0.0,
+      longitude: response.coord?.lon?.toDouble() ?? 0.0,
       weatherWind: WeatherWind(
         speedInMeterPerSecond: response.wind?.speed?.toDouble() ?? 0.0,
       ),
@@ -31,5 +33,33 @@ class WeatherRepository implements IWeatherRepository {
       date: DateTime.fromMillisecondsSinceEpoch((response.dt?.toInt() ?? 0) * 1000),
       placemark: placemark,
     );
+  }
+
+  @override
+  Future<List<Weather>> getForecastsFiveDays(double lat, double lng) async {
+    final response = await _weatherService.getForecastsFiveDays(lat: lat, lon: lng);
+
+    return response.list?.map((e) {
+          return Weather(
+            latitude: response.city?.coord?.lat?.toDouble() ?? 0.0,
+            longitude: response.city?.coord?.lon?.toDouble() ?? 0.0,
+            weatherWind: WeatherWind(
+              speedInMeterPerSecond: e.wind?.speed?.toDouble() ?? 0.0,
+            ),
+            weatherCondition: WeatherCondition(
+              description: e.weather?.first.description ?? '',
+              icon: e.weather?.first.icon ?? '',
+              main: e.weather?.first.main ?? '',
+            ),
+            weatherMain: WeatherMain(
+              humidity: e.main?.humidity?.toDouble() ?? 0,
+              temp: e.main?.temp?.toDouble() ?? 0,
+              tempMax: e.main?.tempMax?.toDouble() ?? 0,
+              tempMin: e.main?.tempMin?.toDouble() ?? 0,
+            ),
+            date: DateTime.fromMillisecondsSinceEpoch((e.dt?.toInt() ?? 0) * 1000),
+          );
+        }).toList() ??
+        [];
   }
 }

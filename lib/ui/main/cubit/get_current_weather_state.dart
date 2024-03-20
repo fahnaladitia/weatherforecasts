@@ -13,11 +13,12 @@ final class GetCurrentWeatherLoading extends GetCurrentWeatherState {}
 
 final class GetCurrentWeatherLoaded extends GetCurrentWeatherState {
   final Weather weather;
+  final List<Weather> forecasts;
 
-  const GetCurrentWeatherLoaded({required this.weather});
+  const GetCurrentWeatherLoaded({required this.weather, required this.forecasts});
 
   @override
-  List<Object> get props => [weather];
+  List<Object> get props => [weather, forecasts];
 
   @override
   bool? get stringify => true;
