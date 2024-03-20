@@ -1,21 +1,41 @@
 import 'package:geocoding/geocoding.dart';
+
+import 'package:latlong2/latlong.dart';
+import 'package:weatherforecasts/data/sources/local/hive/hive_database.dart';
 import 'package:weatherforecasts/data/sources/remote/services/services.dart';
 import 'package:weatherforecasts/domain/models/weather.dart';
 import 'package:weatherforecasts/domain/repositories/repositories.dart';
 
 class WeatherRepository implements IWeatherRepository {
+  final HiveDatabase _hiveDatabase;
   final WeatherService _weatherService;
-  WeatherRepository(this._weatherService);
+  WeatherRepository(this._hiveDatabase, this._weatherService);
 
   @override
-  Future<Weather> getCurrentWeatherByLatLng(double lat, double lng) async {
-    final response = await _weatherService.getCurrentWeatherByLatLng(lat: lat, lon: lng);
-    final placemarks = await placemarkFromCoordinates(lat, lng);
+  Future<Weather> getCurrentWeatherByLatLng(LatLng? latLng) async {
+    LatLng targetLatLng;
+    if (latLng == null) {
+      final latLngFromHive = await _hiveDatabase.getLatLng();
+      if (latLngFromHive == null) {
+        final position = await GeolocatorService.getCurrentLocation();
+        targetLatLng = LatLng(position.latitude, position.longitude);
+      } else {
+        targetLatLng = latLngFromHive;
+      }
+    } else {
+      targetLatLng = latLng;
+    }
+    await _hiveDatabase.saveLatLng(targetLatLng);
+    final response =
+        await _weatherService.getCurrentWeatherByLatLng(lat: targetLatLng.latitude, lon: targetLatLng.longitude);
+    final placemarks = await placemarkFromCoordinates(targetLatLng.latitude, targetLatLng.longitude);
     final placemark = placemarks.firstOrNull;
 
     return Weather(
-      latitude: response.coord?.lat?.toDouble() ?? 0.0,
-      longitude: response.coord?.lon?.toDouble() ?? 0.0,
+      latLng: LatLng(
+        response.coord?.lat?.toDouble() ?? 0.0,
+        response.coord?.lon?.toDouble() ?? 0.0,
+      ),
       weatherWind: WeatherWind(
         speedInMeterPerSecond: response.wind?.speed?.toDouble() ?? 0.0,
       ),
@@ -36,13 +56,15 @@ class WeatherRepository implements IWeatherRepository {
   }
 
   @override
-  Future<List<Weather>> getForecastsFiveDays(double lat, double lng) async {
-    final response = await _weatherService.getForecastsFiveDays(lat: lat, lon: lng);
+  Future<List<Weather>> getForecastsFiveDays(LatLng latLng) async {
+    final response = await _weatherService.getForecastsFiveDays(lat: latLng.latitude, lon: latLng.longitude);
 
     return response.list?.map((e) {
           return Weather(
-            latitude: response.city?.coord?.lat?.toDouble() ?? 0.0,
-            longitude: response.city?.coord?.lon?.toDouble() ?? 0.0,
+            latLng: LatLng(
+              response.city?.coord?.lat?.toDouble() ?? 0.0,
+              response.city?.coord?.lon?.toDouble() ?? 0.0,
+            ),
             weatherWind: WeatherWind(
               speedInMeterPerSecond: e.wind?.speed?.toDouble() ?? 0.0,
             ),

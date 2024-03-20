@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:glassmorphism_ui/glassmorphism_ui.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:weatherforecasts/app/routes/routes.dart';
 import 'package:weatherforecasts/core/common/common.dart';
 import 'package:weatherforecasts/ui/main/cubit/get_current_weather_cubit.dart';
 
@@ -108,7 +111,14 @@ class CurrentPositionAndSearchSection extends StatelessWidget {
                             }
                             return kLight100.withOpacity(0.50);
                           }),
-                          onTap: () {},
+                          onTap: () async {
+                            final result = await Get.toNamed(Routes.MAPS, arguments: state.weather.latLng);
+                            if (!context.mounted) return;
+
+                            if (result != null && result is LatLng) {
+                              context.read<GetCurrentWeatherCubit>().getCurrentWeatherLatLng(latLng: result);
+                            }
+                          },
                           borderRadius: BorderRadius.circular(8),
                           child: Container(
                             padding: const EdgeInsets.all(16),

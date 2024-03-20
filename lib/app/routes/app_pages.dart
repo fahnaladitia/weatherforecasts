@@ -8,4 +8,8 @@ List<GetPage<dynamic>> routes = [
     name: Routes.INITIAL,
     page: () => const MainPage(),
   ),
+  GetPage(
+    name: Routes.MAPS,
+    page: () => const MapsPage(),
+  ),
 ];

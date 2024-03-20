@@ -24,7 +24,7 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
     _getCurrentWeatherCubit = DependencyInjection.DI<GetCurrentWeatherCubit>();
-    _getCurrentWeatherCubit.getInitialWeather();
+    _getCurrentWeatherCubit.getCurrentWeatherLatLng();
   }
 
   @override
@@ -45,9 +45,7 @@ class _MainPageState extends State<MainPage> {
             ),
           ),
           child: BasicScaffold(
-            onRefresh: () async {
-              _getCurrentWeatherCubit.getInitialWeather();
-            },
+            onRefresh: () async => _getCurrentWeatherCubit.getCurrentWeatherLatLng(isUpdate: true),
             backgroundColor: Colors.transparent,
             body: const Column(
               crossAxisAlignment: CrossAxisAlignment.start,

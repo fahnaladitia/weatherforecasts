@@ -1,20 +1,19 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
 import 'package:geocoding/geocoding.dart';
+import 'package:latlong2/latlong.dart';
 
 import 'package:weatherforecasts/core/common/common.dart';
 
 class Weather {
-  final double latitude;
-  final double longitude;
+  final LatLng latLng;
   final WeatherCondition weatherCondition;
   final WeatherMain weatherMain;
   final WeatherWind weatherWind;
   final DateTime date;
   final Placemark? placemark;
   Weather({
-    required this.latitude,
-    required this.longitude,
+    required this.latLng,
     // required this.latLng,
     required this.weatherCondition,
     required this.weatherMain,
@@ -28,12 +27,21 @@ class Weather {
   String get displayTime => date.display("HH:mm");
 
   String get displayLocation {
-    return placemark?.subAdministrativeArea ?? placemark?.administrativeArea ?? placemark?.country ?? 'Unknown';
+    if (placemark == null) return 'Unknown';
+    if (placemark?.subAdministrativeArea != null && placemark?.subAdministrativeArea?.isNotEmpty == true) {
+      return placemark!.subAdministrativeArea!;
+    } else if (placemark?.administrativeArea != null && placemark?.administrativeArea?.isNotEmpty == true) {
+      return placemark!.administrativeArea!;
+    } else if (placemark?.country != null && placemark?.country?.isNotEmpty == true) {
+      return placemark!.country!;
+    } else {
+      return placemark?.subAdministrativeArea ?? placemark?.administrativeArea ?? placemark?.country ?? 'Unknown';
+    }
   }
 
   @override
   String toString() {
-    return 'Weather(latitude: $latitude, longitude: $longitude, weatherCondition: $weatherCondition, weatherMain: $weatherMain, weatherWind: $weatherWind, date: $date, placemark: $placemark)';
+    return 'Weather(latLng: $latLng, weatherCondition: $weatherCondition, weatherMain: $weatherMain, weatherWind: $weatherWind, date: $date, placemark: $placemark)';
   }
 }
 

@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:weatherforecasts/core/common/common.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:weatherforecasts/data/sources/local/hive/hive_database.dart';
 
 import 'core/config/app_rest_client.dart';
 import 'data/repositories/repositories.dart';
@@ -24,19 +25,23 @@ class DependencyInjection {
 
   static Future<void> _initializeServices() async {
 // Client Http Services
-    DI.registerFactory<Dio>(() => AppRestClient(baseURL: baseURL, apiKey: apiKey).dio);
+    DI.registerSingleton<Dio>(AppRestClient(baseURL: baseURL, apiKey: apiKey).dio);
 
-    DI.registerFactory<WeatherService>(() => WeatherService(DI.get<Dio>()));
+    DI.registerSingleton<WeatherService>(WeatherService(DI.get()));
   }
 
-  static Future<void> _initializeDatabase() async {}
+  static Future<void> _initializeDatabase() async {
+    final database = await HiveDatabase.instance();
+    DI.registerSingleton<HiveDatabase>(database);
+  }
+
   static Future<void> _initializeRepositories() async {
-    DI.registerFactory<IWeatherRepository>(() => WeatherRepository(DI.get<WeatherService>()));
+    DI.registerSingleton<IWeatherRepository>(WeatherRepository(DI.get(), DI.get()));
   }
 
   static Future<void> _initializeBlocs() async {
     Bloc.observer = const SimpleBlocObserver();
 
-    DI.registerFactory<GetCurrentWeatherCubit>(() => GetCurrentWeatherCubit(DI.get<IWeatherRepository>()));
+    DI.registerFactory<GetCurrentWeatherCubit>(() => GetCurrentWeatherCubit(DI.get()));
   }
 }

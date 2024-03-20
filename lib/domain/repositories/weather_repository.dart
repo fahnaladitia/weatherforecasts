@@ -1,6 +1,8 @@
+import 'package:latlong2/latlong.dart';
+
 import '../models/models.dart';
 
 abstract class IWeatherRepository {
-  Future<Weather> getCurrentWeatherByLatLng(double lat, double lng);
-  Future<List<Weather>> getForecastsFiveDays(double lat, double lng);
+  Future<Weather> getCurrentWeatherByLatLng(LatLng? latLng);
+  Future<List<Weather>> getForecastsFiveDays(LatLng latLng);
 }
