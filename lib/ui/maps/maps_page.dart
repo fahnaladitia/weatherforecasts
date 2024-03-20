@@ -1,3 +1,7 @@
+// ignore_for_file: unused_element
+
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
@@ -5,7 +9,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:weatherforecasts/core/common/common.dart';
+import 'package:weatherforecasts/core/components/components.dart';
+import 'package:weatherforecasts/data/sources/remote/services/geoapify_service.dart';
 import 'package:weatherforecasts/data/sources/remote/services/services.dart';
+
+import '../../domain/models/models.dart';
 
 class MapsPage extends StatefulWidget {
   const MapsPage({super.key});
@@ -45,22 +53,39 @@ class _MapsPageState extends State<MapsPage> with TickerProviderStateMixin {
       }
     });
     _selectedLatLng = Get.arguments as LatLng;
+    _debouncedSearch = _debounce<Iterable<Suggestion>, String>((s) {
+      return _search(context, s);
+    });
+  }
+
+  final _searchController = SearchController();
+  late final _Debounceable<Iterable<Suggestion>?, String> _debouncedSearch;
+
+  Future<Iterable<Suggestion>?> _search(BuildContext context, String query) async {
+    if (query.isEmpty) return null;
+    try {
+      final suggestions = await GeoapifyService.getGeoapifyData(query);
+      return suggestions;
+    } catch (e) {
+      if (!context.mounted) return null;
+      ToastUtils.showToastError(context, e.toString());
+      return null;
+    }
   }
 
   @override
   void dispose() {
     _animationController.dispose();
-
+    _searchController.dispose();
     _mapController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Maps'),
-      ),
+    return BasicScaffold(
+      extendBodyBehindAppBar: true,
+      isSingleChildScrollView: false,
       body: Stack(
         children: [
           FlutterMap(
@@ -115,6 +140,39 @@ class _MapsPageState extends State<MapsPage> with TickerProviderStateMixin {
               _currentLocationLayer,
             ],
           ),
+          Positioned(
+              top: 16,
+              left: 16,
+              right: 16,
+              child: SearchAnchor.bar(
+                // builder: (context, controller) {
+                //   return SearchBar(
+                //     controller: controller,
+                //   );
+                // },
+                searchController: _searchController,
+                suggestionsBuilder: (context, controller) async {
+                  final results = await _debouncedSearch(controller.text);
+                  if (results == null) return [];
+
+                  final query = controller.text;
+                  if (query.isEmpty) return [];
+                  return results.map((e) {
+                    return ListTile(
+                      title: Text(
+                        e.address,
+                        style: AppTextStyle.body1SemiBold(context),
+                      ),
+                      onTap: () {
+                        controller.closeView(controller.text);
+                        _mapController.move(e.latLng, 13.0);
+                        _selectedLatLng = e.latLng;
+                        _animationController.forward(from: 0);
+                      },
+                    );
+                  }).toList();
+                },
+              )),
           Positioned(
             bottom: 16,
             right: 16,
@@ -217,5 +275,48 @@ class _MapsPageState extends State<MapsPage> with TickerProviderStateMixin {
     });
 
     controller.forward();
+  }
+}
+
+typedef _Debounceable<S, T> = Future<S?> Function(T parameter);
+
+_Debounceable<S, T> _debounce<S, T>(_Debounceable<S?, T> function) {
+  _DebounceTimer? debounceTimer;
+
+  return (T parameter) async {
+    if (debounceTimer != null && !debounceTimer!.isCompleted) {
+      debounceTimer!.cancel();
+    }
+    debounceTimer = _DebounceTimer();
+    try {
+      await debounceTimer!.future;
+    } catch (error) {
+      print(error); // Should be 'Debounce cancelled' when cancelled.
+      return null;
+    }
+    return function(parameter);
+  };
+}
+
+class _DebounceTimer {
+  _DebounceTimer() {
+    _timer = Timer(_duration, _onComplete);
+  }
+
+  late final Timer _timer;
+  final Duration _duration = const Duration(milliseconds: 500);
+  final Completer<void> _completer = Completer<void>();
+
+  void _onComplete() {
+    _completer.complete();
+  }
+
+  Future<void> get future => _completer.future;
+
+  bool get isCompleted => _completer.isCompleted;
+
+  void cancel() {
+    _timer.cancel();
+    _completer.completeError('Debounce cancelled');
   }
 }

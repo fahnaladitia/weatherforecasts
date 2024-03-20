@@ -38,7 +38,7 @@ class BasicScaffold extends StatelessWidget {
           },
       child: Scaffold(
         key: key,
-        extendBodyBehindAppBar: extendBodyBehindAppBar,
+        extendBodyBehindAppBar: true,
         backgroundColor: backgroundColor,
         resizeToAvoidBottomInset: resizeToAvoidBottomInset,
         appBar: appBar,
