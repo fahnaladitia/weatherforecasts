@@ -164,6 +164,7 @@ class _MapsPageState extends State<MapsPage> with TickerProviderStateMixin {
                         style: AppTextStyle.body1SemiBold(context),
                       ),
                       onTap: () {
+                        _searchController.text = e.address;
                         controller.closeView(controller.text);
                         _mapController.move(e.latLng, 13.0);
                         _selectedLatLng = e.latLng;
