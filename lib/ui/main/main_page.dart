@@ -45,11 +45,13 @@ class _MainPageState extends State<MainPage> {
             ),
           ),
           child: BasicScaffold(
+            isUseSafeArea: false,
             onRefresh: () async => _getCurrentWeatherCubit.getCurrentWeatherLatLng(isUpdate: true),
             backgroundColor: Colors.transparent,
             body: const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SizedBox(height: 24),
                 CurrentPositionAndSearchSection(),
                 CurrentWeatherInformationSection(),
                 ForecastsTodaySection(),

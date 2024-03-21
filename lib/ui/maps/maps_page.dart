@@ -25,6 +25,7 @@ class MapsPage extends StatefulWidget {
 class _MapsPageState extends State<MapsPage> with TickerProviderStateMixin {
   late final MapController _mapController;
   LatLng? _selectedLatLng;
+  late final LatLng _initialLatLng;
   late final AnimationController _animationController;
   late final Animation<double> _animation;
   late final CurrentLocationLayer _currentLocationLayer;
@@ -52,7 +53,9 @@ class _MapsPageState extends State<MapsPage> with TickerProviderStateMixin {
         _animationController.forward(from: 0);
       }
     });
-    _selectedLatLng = Get.arguments as LatLng;
+    _initialLatLng = Get.arguments as LatLng;
+
+    _selectedLatLng = _initialLatLng;
     _debouncedSearch = _debounce<Iterable<Suggestion>, String>((s) {
       return _search(context, s);
     });
@@ -85,13 +88,14 @@ class _MapsPageState extends State<MapsPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return BasicScaffold(
       extendBodyBehindAppBar: true,
+      isUseSafeArea: false,
       isSingleChildScrollView: false,
       body: Stack(
         children: [
           FlutterMap(
             mapController: _mapController,
             options: MapOptions(
-              initialCenter: Get.arguments as LatLng,
+              initialCenter: _initialLatLng,
               initialZoom: 13.0,
             ),
             children: [
@@ -141,38 +145,121 @@ class _MapsPageState extends State<MapsPage> with TickerProviderStateMixin {
             ],
           ),
           Positioned(
-              top: 16,
+              top: 16 + 24,
               left: 16,
               right: 16,
-              child: SearchAnchor.bar(
-                // builder: (context, controller) {
-                //   return SearchBar(
-                //     controller: controller,
-                //   );
-                // },
-                searchController: _searchController,
-                suggestionsBuilder: (context, controller) async {
-                  final results = await _debouncedSearch(controller.text);
-                  if (results == null) return [];
-
-                  final query = controller.text;
-                  if (query.isEmpty) return [];
-                  return results.map((e) {
-                    return ListTile(
-                      title: Text(
-                        e.address,
-                        style: AppTextStyle.body1SemiBold(context),
-                      ),
-                      onTap: () {
-                        _searchController.text = e.address;
-                        controller.closeView(controller.text);
-                        _mapController.move(e.latLng, 13.0);
-                        _selectedLatLng = e.latLng;
-                        _animationController.forward(from: 0);
+              child: Row(
+                children: [
+                  // Button Back
+                  FloatingActionButton.small(
+                    heroTag: 'back',
+                    backgroundColor: kLight100,
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    child: const FaIcon(
+                      FontAwesomeIcons.arrowLeft,
+                      color: kDark500,
+                      size: 18,
+                    ),
+                    onPressed: () => Get.back(),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: SearchAnchor(
+                      builder: (context, controller) {
+                        return FloatingActionButton.extended(
+                          extendedPadding: const EdgeInsets.symmetric(horizontal: 16),
+                          enableFeedback: true,
+                          label: Text(
+                            controller.text.isEmpty ? 'Search Location' : controller.text,
+                            style: AppTextStyle.body1SemiBold(context),
+                            textAlign: TextAlign.start,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          heroTag: 'search',
+                          backgroundColor: kLight100,
+                          onPressed: () => controller.openView(),
+                          // child: const FaIcon(
+                          //   FontAwesomeIcons.magnifyingGlass,
+                          //   color: kDark500,
+                          //   size: 24,
+                          // ),
+                        );
                       },
-                    );
-                  }).toList();
-                },
+                      viewBuilder: (suggestions) {
+                        final suggestionsList = suggestions.toList();
+                        return ListView.separated(
+                          shrinkWrap: true,
+                          itemCount: suggestionsList.length,
+                          separatorBuilder: (context, index) => const Divider(height: 1, color: kDark100),
+                          itemBuilder: (context, index) {
+                            return suggestionsList[index];
+                          },
+                        );
+                      },
+                      // isFullScreen: false,
+                      viewShape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(16),
+                          topRight: Radius.circular(16),
+                        ),
+                      ),
+                      dividerColor: kDark100,
+                      viewOnChanged: (value) {
+                        if (value.isEmpty) {
+                          _searchController.closeView(value);
+                        }
+                      },
+                      viewLeading: IconButton(
+                        icon: const FaIcon(
+                          FontAwesomeIcons.arrowLeft,
+                          color: kDark500,
+                          size: 18,
+                        ),
+                        onPressed: () {
+                          FocusManager.instance.primaryFocus?.unfocus();
+                          Get.back();
+                        },
+                      ),
+                      searchController: _searchController,
+                      suggestionsBuilder: (context, controller) async {
+                        final results = await _debouncedSearch(controller.text);
+                        if (results == null) return [];
+
+                        final query = controller.text;
+                        if (query.isEmpty) return [];
+                        return results.map((e) {
+                          return ListTile(
+                            minLeadingWidth: 0,
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                            trailing: const FaIcon(
+                              FontAwesomeIcons.chevronRight,
+                              color: kDark500,
+                              size: 14,
+                            ),
+                            leading: const Icon(
+                              Icons.location_on_outlined,
+                              color: kDark500,
+                              size: 14,
+                            ),
+                            title: Text(
+                              e.address,
+                              style: AppTextStyle.body1SemiBold(context),
+                              textAlign: TextAlign.start,
+                            ),
+                            onTap: () {
+                              _searchController.text = e.address;
+                              controller.closeView(controller.text);
+                              _mapController.move(e.latLng, 13.0);
+                              _selectedLatLng = e.latLng;
+                              _animationController.forward(from: 0);
+                            },
+                          );
+                        }).toList();
+                      },
+                    ),
+                  ),
+                ],
               )),
           Positioned(
             bottom: 16,
@@ -184,7 +271,7 @@ class _MapsPageState extends State<MapsPage> with TickerProviderStateMixin {
                         children: [
                           Opacity(
                             opacity: _animation.value / 48,
-                            child: FloatingActionButton.small(
+                            child: FloatingActionButton(
                               heroTag: 'selectLocation',
                               backgroundColor: kLight100,
                               child: const FaIcon(
@@ -196,11 +283,11 @@ class _MapsPageState extends State<MapsPage> with TickerProviderStateMixin {
                               },
                             ),
                           ),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: 16),
                         ],
                       )
                     : const SizedBox(),
-                FloatingActionButton.small(
+                FloatingActionButton(
                   heroTag: 'currentLocation',
                   backgroundColor: kLight100,
                   child: const FaIcon(

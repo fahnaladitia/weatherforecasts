@@ -12,4 +12,8 @@ List<GetPage<dynamic>> routes = [
     name: Routes.MAPS,
     page: () => const MapsPage(),
   ),
+  GetPage(
+    name: Routes.WEATHER_DETAIL,
+    page: () => const WeatherDetailPage(),
+  ),
 ];

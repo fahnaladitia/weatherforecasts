@@ -13,6 +13,7 @@ class BasicScaffold extends StatelessWidget {
   final Widget? floatingActionButton;
   final ScrollController? scrollController;
   final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
+  final bool isUseSafeArea;
   const BasicScaffold({
     super.key,
     this.appBar,
@@ -27,6 +28,7 @@ class BasicScaffold extends StatelessWidget {
     this.floatingActionButton,
     this.scrollController,
     this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
+    this.isUseSafeArea = true,
   });
 
   @override
@@ -43,6 +45,7 @@ class BasicScaffold extends StatelessWidget {
         resizeToAvoidBottomInset: resizeToAvoidBottomInset,
         appBar: appBar,
         body: SafeArea(
+          top: isUseSafeArea,
           bottom: false,
           child: isSingleChildScrollView
               ? onRefresh != null

@@ -30,36 +30,33 @@ class CurrentPositionAndSearchSection extends StatelessWidget {
                         color: kLight100.withOpacity(0.25),
                         shadowStrength: 0,
                         border: Border.all(color: kLight100.withOpacity(0.8)),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 16,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Flexible(
-                                child: Row(
-                                  children: [
-                                    FaIcon(
-                                      FontAwesomeIcons.locationDot,
-                                      size: 14,
-                                      color: kLight100,
-                                      shadows: [
-                                        Shadow(
-                                          color: kDark500.withOpacity(0.5),
-                                          offset: const Offset(-1, 1.5),
-                                          blurRadius: 5,
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Flexible(
-                                      child: Text(
-                                        state.weather.displayLocation,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: AppTextStyle.body1SemiBold(context)?.copyWith(
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            overlayColor: MaterialStateProperty.resolveWith((states) {
+                              if (states.contains(MaterialState.pressed)) {
+                                return kLight100.withOpacity(0.75);
+                              }
+                              return kLight100.withOpacity(0.50);
+                            }),
+                            onTap: () {
+                              Get.toNamed(Routes.WEATHER_DETAIL, arguments: context.read<GetCurrentWeatherCubit>());
+                            },
+                            borderRadius: BorderRadius.circular(24),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 16,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Flexible(
+                                    child: Row(
+                                      children: [
+                                        FaIcon(
+                                          FontAwesomeIcons.locationDot,
+                                          size: 14,
                                           color: kLight100,
                                           shadows: [
                                             Shadow(
@@ -69,29 +66,47 @@ class CurrentPositionAndSearchSection extends StatelessWidget {
                                             ),
                                           ],
                                         ),
-                                      ),
+                                        const SizedBox(width: 8),
+                                        Flexible(
+                                          child: Text(
+                                            state.weather.displayLocation,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: AppTextStyle.body1SemiBold(context)?.copyWith(
+                                              color: kLight100,
+                                              shadows: [
+                                                Shadow(
+                                                  color: kDark500.withOpacity(0.5),
+                                                  offset: const Offset(-1, 1.5),
+                                                  blurRadius: 5,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  const SizedBox(width: 8),
-                                  FaIcon(
-                                    FontAwesomeIcons.chevronRight,
-                                    size: 14,
-                                    color: kLight100,
-                                    shadows: [
-                                      Shadow(
-                                        color: kDark500.withOpacity(0.5),
-                                        offset: const Offset(-1, 1.5),
-                                        blurRadius: 5,
+                                  ),
+                                  Row(
+                                    children: [
+                                      const SizedBox(width: 8),
+                                      FaIcon(
+                                        FontAwesomeIcons.chevronRight,
+                                        size: 14,
+                                        color: kLight100,
+                                        shadows: [
+                                          Shadow(
+                                            color: kDark500.withOpacity(0.5),
+                                            offset: const Offset(-1, 1.5),
+                                            blurRadius: 5,
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
                                 ],
                               ),
-                            ],
+                            ),
                           ),
                         ),
                       ),
