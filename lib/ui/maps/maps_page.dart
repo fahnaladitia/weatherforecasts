@@ -162,28 +162,31 @@ class _MapsPageState extends State<MapsPage> with TickerProviderStateMixin {
                     ),
                     onPressed: () => Get.back(),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: 8),
                   Expanded(
                     child: SearchAnchor(
                       builder: (context, controller) {
-                        return FloatingActionButton.extended(
-                          extendedPadding: const EdgeInsets.symmetric(horizontal: 16),
-                          enableFeedback: true,
-                          label: Text(
-                            controller.text.isEmpty ? 'Search Location' : controller.text,
-                            style: AppTextStyle.body1SemiBold(context),
-                            textAlign: TextAlign.start,
-                            overflow: TextOverflow.ellipsis,
+                        return Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(24),
                           ),
-                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          heroTag: 'search',
-                          backgroundColor: kLight100,
-                          onPressed: () => controller.openView(),
-                          // child: const FaIcon(
-                          //   FontAwesomeIcons.magnifyingGlass,
-                          //   color: kDark500,
-                          //   size: 24,
-                          // ),
+                          elevation: 10,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(24),
+                            onTap: () {
+                              controller.openView();
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 11),
+                              child: Text(
+                                controller.text.isEmpty ? "Search Location" : controller.text,
+                                style: AppTextStyle.body1SemiBold(context),
+                                textAlign: TextAlign.center,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
+                            ),
+                          ),
                         );
                       },
                       viewBuilder: (suggestions) {
