@@ -145,7 +145,7 @@ class NextForecastsSection extends StatelessWidget {
               }
 
               return ListView.separated(
-                itemCount: listWeather.length + 1,
+                itemCount: listWeather.length,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 padding: const EdgeInsets.only(
@@ -156,15 +156,6 @@ class NextForecastsSection extends StatelessWidget {
                 ),
                 separatorBuilder: (context, index) => const SizedBox(height: 16),
                 itemBuilder: (context, index) {
-                  final lastIndex = listWeather.length;
-                  if (lastIndex == index) {
-                    return BasicButton(
-                      width: double.infinity,
-                      type: ButtonType.tertiary,
-                      text: 'See more',
-                      onPressed: () {},
-                    );
-                  }
                   final forecast = listWeather[index];
                   return Container(
                     padding: const EdgeInsets.all(16),
