@@ -5,6 +5,7 @@ import 'package:weatherforecasts/core/common/common.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:weatherforecasts/data/sources/local/hive/hive_database.dart';
+import 'package:weatherforecasts/secrets.dart';
 
 import 'core/config/app_rest_client.dart';
 import 'data/repositories/repositories.dart';
