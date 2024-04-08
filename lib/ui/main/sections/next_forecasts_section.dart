@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:weatherforecasts/core/common/common.dart';
-import 'package:weatherforecasts/core/components/components.dart';
 import 'package:weatherforecasts/domain/models/weather.dart';
 import 'package:weatherforecasts/ui/main/cubit/get_current_weather_cubit.dart';
 
@@ -211,13 +210,6 @@ class NextForecastsSection extends StatelessWidget {
                               forecast.weatherMain.displayTemperature(),
                               style: AppTextStyle.body1SemiBold(context),
                             ),
-                            const SizedBox(width: 8),
-                            // Button
-                            const FaIcon(
-                              FontAwesomeIcons.chevronRight,
-                              size: 14,
-                              color: kDark500,
-                            )
                           ],
                         )
                       ],
@@ -289,13 +281,6 @@ class NextForecastsSection extends StatelessWidget {
                             'XX°',
                             style: AppTextStyle.body1SemiBold(context),
                           ),
-                          const SizedBox(width: 8),
-                          // Button
-                          const FaIcon(
-                            FontAwesomeIcons.chevronRight,
-                            size: 14,
-                            color: kDark500,
-                          )
                         ],
                       )
                     ],
